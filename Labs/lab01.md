@@ -3,22 +3,6 @@
 
 In this exercise, you'll get started with Azure AI Services by creating an **Azure AI Services** resource in your Azure subscription and using it from a client application. The goal of the exercise is not to gain expertise in any particular service, but rather to become familiar with a general pattern for provisioning and working with Azure AI services as a developer.
 
-## Clone the repository in Visual Studio Code
-
-You'll develop your code using Visual Studio Code. The code files for your app have been provided in a GitHub repo.
-
-> **Tip**: If you have already cloned the **mslearn-ai-services** repo, open it in Visual Studio code. Otherwise, follow these steps to clone it to your development environment.
-
-1. Start Visual Studio Code.
-2. Open the palette (SHIFT+CTRL+P) and run a **Git: Clone** command to clone the `https://github.com/MicrosoftLearning/mslearn-ai-services` repository to a local folder (it doesn't matter which folder).
-3. When the repository has been cloned, open the folder in Visual Studio Code.
-4. Wait while additional files are installed to support the C# code projects in the repo, if necessary
-
-    > **Note**: If you are prompted to add required assets to build and debug, select **Not Now**.
-
-5. Expand the `Labfiles/01-use-azure-ai-services` folder.
-
-Code for both C# and Python has been provided. Expand the folder of your preferred language.
 
 ## Provision an Azure AI Services resource
 
