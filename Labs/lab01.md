@@ -6,15 +6,16 @@ In this exercise, you'll get started with Azure AI Services by creating an **Azu
 
 ## Provision an Azure AI Services resource
 
-Azure AI Services are cloud-based services that encapsulate artificial intelligence capabilities you can incorporate into your applications. You can provision individual Azure AI services resources for specific APIs (for example, **Language** or **Vision**), or you can provision a single **Azure AI Services** resource that provides access to multiple Azure AI services APIs through a single endpoint and key. In this case, you'll use a single **Azure AI Services** resource.
+Azure AI Services are cloud-based services that encapsulate artificial intelligence capabilities you can incorporate into your applications. You can provision individual Azure AI services resources for specific APIs (for example, **Language** or **Vision**), or you can provision a single **Azure AI Services** resource that provides access to multiple Azure AI services APIs through a single endpoint and key. In this case, you'll use a single **Language AI** resource.
 
 1. Open the Azure portal at `https://portal.azure.com`, and sign in using the Microsoft account associated with your Azure subscription.
-2. In the top search bar, search for *Azure AI services*, select **Azure AI Services**, and create an Azure AI services multi-service account resource with the following settings:
+2. In the top search bar, search for *Language*, select **Language**, and **create** a Language resource with the following settings:
+    - In **Select additional features**, click on **continue...**
     - **Subscription**: *Your Azure subscription*
-    - **Resource group**: *Choose or create a resource group (if you are using a restricted subscription, you may not have permission to create a new resource group - use the one provided)*
+    - **Resource group**: *Choose or create a resource group for the day*
     - **Region**: *Choose any available region*
     - **Name**: *Enter a unique name*
-    - **Pricing tier**: Standard S0
+    - **Pricing tier**: S 
 3. Select the required checkboxes and create the resource.
 4. Wait for deployment to complete, and then view the deployment details.
 5. Go to the resource and view its **Keys and Endpoint** page. This page contains the information that you will need to connect to your resource and use it from applications you develop. Specifically:
@@ -22,16 +23,21 @@ Azure AI Services are cloud-based services that encapsulate artificial intellige
     - Two *keys* that can be used for authentication (client applications can use either key to authenticate).
     - The *location* where the resource is hosted. This is required for requests to some (but not all) APIs.
 
+## Launch a GitHub Codespace as the dev environment
+
+GitHub Codespaces provide a container based environment that can be used to build/test/debug your applications. This lab has a codespace prepared with the Python and Azure tools required to run the labs.
+
+1. Go to the main page of the labs repository https://github.com/huete93/Tecnun-AIFun-2024/ 
+2. Launch the codespace by clicking **Code**>**Codespaces**>**Create codespace on main**.
+3. Wait for the codespace to start, it will take some minutes. 
+
 ## Use a REST Interface
 
 The Azure AI services APIs are REST-based, so you can consume them by submitting JSON requests over HTTP. In this example, you'll explore a console application that uses the **Language** REST API to perform language detection; but the basic principle is the same for all of the APIs supported by the Azure AI Services resource.
 
-> **Note**: In this exercise, you can choose to use the REST API from either **C#** or **Python**. In the steps below, perform the actions appropriate for your preferred language.
-
-1. In Visual Studio Code, expand the **C-Sharp** or **Python** folder depending on your language preference.
+1. In GitHub Codespace, expand the **Lab-Files/Lab01/rest-client** folder.
 2. View the contents of the **rest-client** folder, and note that it contains a file for configuration settings:
 
-    - **C#**: appsettings.json
     - **Python**: .env
 
     Open the configuration file and update the configuration values it contains to reflect the **endpoint** and an authentication **key** for your Azure AI services resource. Save your changes.
