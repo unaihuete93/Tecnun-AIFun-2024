@@ -71,15 +71,10 @@ The Azure AI services APIs are REST-based, so you can consume them by submitting
 
 You can write code that consumes Azure AI services REST APIs directly, but there are software development kits (SDKs) for many popular programming languages, including Microsoft C#, Python, Java, and Node.js. Using an SDK can greatly simplify development of applications that consume Azure AI services.
 
-1. In Visual Studio Code, expand the **sdk-client** folder under the **C-Sharp** or **Python** folder, depending on your language preference. Then run `cd ../sdk-client` to change into the relevant **sdk-client** folder.
+1. In Visual Studio Code, expand the **sdk-client** folder under the **Lab-Files/Lab01** folder. Right click on the **sdk-client** folder, select *Open in Integrated Terminal*
 
 2. Install the Text Analytics SDK package by running the appropriate command for your language preference:
 
-    **C#**
-
-    ```
-    dotnet add package Azure.AI.TextAnalytics --version 5.3.0
-    ```
 
     **Python**
 
@@ -89,14 +84,12 @@ You can write code that consumes Azure AI services REST APIs directly, but there
 
 3. View the contents of the **sdk-client** folder, and note that it contains a file for configuration settings:
 
-    - **C#**: appsettings.json
     - **Python**: .env
 
     Open the configuration file and update the configuration values it contains to reflect the **endpoint** and an authentication **key** for your Azure AI services resource. Save your changes.
     
 4. Note that the **sdk-client** folder contains a code file for the client application:
 
-    - **C#**: Program.cs
     - **Python**: sdk-client.py
 
     Open the code file and review the code it contains, noting the following details:
@@ -106,22 +99,19 @@ You can write code that consumes Azure AI services REST APIs directly, but there
 
 5. Return to the terminal, ensure you are in the **sdk-client** folder, and enter the following command to run the program:
 
-    **C#**
-
-    ```
-    dotnet run
-    ```
-
     **Python**
 
     ```
     python sdk-client.py
     ```
 
-6. When prompted, enter some text and review the language that is detected by the service. For example, try entering "Goodbye", "Au revoir", and "Hasta la vista".
-7. When you have finished testing the application, enter "quit" to stop the program.
+6. When prompted, enter some text and review the language that is detected by the service. For example, try entering "Goodbye", "Au revoir", and "Hasta la vista", or any longer sentence.
 
-> **Note**: Some languages that require Unicode character sets may not be recognized in this simple console application.
+
+## ACTION Lab 01
+
+**Upload an screenshot to ADI with the execution of the sdk-client program testing it with a sentence.** 
+
 
 ## Clean up resources
 
