@@ -44,7 +44,6 @@ The Azure AI services APIs are REST-based, so you can consume them by submitting
 
 3. Note that the **rest-client** folder contains a code file for the client application:
 
-    - **C#**: Program.cs
     - **Python**: rest-client.py
 
     Open the code file and review the code it contains, noting the following details:
@@ -57,20 +56,15 @@ The Azure AI services APIs are REST-based, so you can consume them by submitting
 
 4. Right click on the **rest-client** folder, select *Open in Integrated Terminal* and run the following command:
 
-    **C#**
-
-    ```
-    dotnet run
-    ```
+    
 
     **Python**
 
     ```
-    pip install python-dotenv
     python rest-client.py
     ```
 
-5. When prompted, enter some text and review the language that is detected by the service, which is returned in the JSON response. For example, try entering "Hello", "Bonjour", and "Gracias".
+5. When prompted, enter some text and review the language that is detected by the service, which is returned in the JSON response. For example, try entering any sentence for the language to be detected, for example, "Hello and welcome to the Azure IA services". Longer sentences will work better. 
 6. When you have finished testing the application, enter "quit" to stop the program.
 
 ## Use an SDK
