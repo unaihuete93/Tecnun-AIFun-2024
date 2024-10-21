@@ -28,7 +28,9 @@ If you don't already have one in your subscription, you'll need to provision an 
 In this exercise, you'll complete a partially implemented client application that uses the Azure AI Vision SDK to analyze images.
 
 
-1. In Visual Studio Code, in the **Explorer** pane, browse to the **Lab-Files/Lab02** folder and expand the  folder.
+1. From the root page of the repository, launch the same GitHub Codespace from lab01 (or reopen if still running). https://github.com/unaihuete93/Tecnun-AIFun-2024 
+
+1. In Github Codespace, in the **Explorer** pane, browse to the **Lab-Files/Lab02** folder and expand the  folder.
 2. Right-click on the folder and open an integrated terminal. Then install the Azure AI Vision SDK package:
 
 
@@ -65,8 +67,8 @@ In this exercise, you'll complete a partially implemented client application tha
 
 In this exercise, you will use the Azure AI Vision service to analyze multiple images.
 
-1. In Visual Studio Code, expand the **lab02** folder and the **images** folder it contains.
-2. Select each of the image files in turn to view them in Visual Studio Code.
+1. In Github Codespace, expand the **lab02** folder and the **images** folder it contains.
+2. Select each of the image files in turn to view them in Github Codespace.
 
 ## Analyze an image to suggest a caption
 
