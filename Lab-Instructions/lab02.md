@@ -65,23 +65,14 @@ In this exercise, you'll complete a partially implemented client application tha
 
 In this exercise, you will use the Azure AI Vision service to analyze multiple images.
 
-1. In Visual Studio Code, expand the **image-analysis** folder and the **images** folder it contains.
+1. In Visual Studio Code, expand the **lab02** folder and the **images** folder it contains.
 2. Select each of the image files in turn to view them in Visual Studio Code.
 
 ## Analyze an image to suggest a caption
 
 Now you're ready to use the SDK to call the Vision service and analyze an image.
 
-1. In the code file for your client application (**Program.cs** or **image-analysis.py**), in the **Main** function, note that the code to load the configuration settings has been provided. Then find the comment **Authenticate Azure AI Vision client**. Then, under this comment, add the following language-specific code to create and authenticate a Azure AI Vision client object:
-
-**C#**
-
-```C#
-// Authenticate Azure AI Vision client
-ImageAnalysisClient client = new ImageAnalysisClient(
-    new Uri(aiSvcEndpoint),
-    new AzureKeyCredential(aiSvcKey));
-```
+1. In the code file for your client application, in the **Main** function, note that the code to load the configuration settings has been provided. Then find the comment **Authenticate Azure AI Vision client**. Then, under this comment, add the following language-specific code to create and authenticate a Azure AI Vision client object:
 
 **Python**
 
@@ -96,19 +87,6 @@ cv_client = ImageAnalysisClient(
 2. In the **Main** function, under the code you just added, note that the code specifies the path to an image file and then passes the image path to two other functions (**AnalyzeImage** and **BackgroundForeground**). These functions are not yet fully implemented.
 
 3. In the **AnalyzeImage** function, under the comment **Get result with specify features to be retrieved**, add the following code:
-
-**C#**
-
-```C#
-// Get result with specified features to be retrieved
-ImageAnalysisResult result = client.Analyze(
-    BinaryData.FromStream(stream),
-    VisualFeatures.Caption | 
-    VisualFeatures.DenseCaptions |
-    VisualFeatures.Objects |
-    VisualFeatures.Tags |
-    VisualFeatures.People);
-```
 
 **Python**
 
@@ -127,32 +105,7 @@ result = cv_client.analyze(
     
 4. In the **AnalyzeImage** function, under the comment **Display analysis results**, add the following code (including the comments indicating where you will add more code later.):
 
-**C#**
 
-```C#
-// Display analysis results
-// Get image captions
-if (result.Caption.Text != null)
-{
-    Console.WriteLine(" Caption:");
-    Console.WriteLine($"   \"{result.Caption.Text}\", Confidence {result.Caption.Confidence:0.00}\n");
-}
-
-// Get image dense captions
-Console.WriteLine(" Dense Captions:");
-foreach (DenseCaption denseCaption in result.DenseCaptions.Values)
-{
-    Console.WriteLine($"   Caption: '{denseCaption.Text}', Confidence: {denseCaption.Confidence:0.00}");
-}
-
-// Get image tags
-
-
-// Get objects in the image
-
-
-// Get people in the image
-```
 
 **Python**
 
@@ -179,13 +132,8 @@ if result.dense_captions is not None:
 
 ```
     
-5. Save your changes and return to the integrated terminal for the **image-analysis** folder, and enter the following command to run the program with the argument **images/street.jpg**:
+5. Save your changes and return to the integrated terminal for the **lab02** folder, and enter the following command to run the program with the argument **images/street.jpg**:
 
-**C#**
-
-```
-dotnet run images/street.jpg
-```
 
 **Python**
 
@@ -202,20 +150,6 @@ python image-analysis.py images/street.jpg
 It can sometimes be useful to identify relevant *tags* that provide clues about the contents of an image.
 
 1. In the **AnalyzeImage** function, under the comment **Get image tags**, add the following code:
-
-**C#**
-
-```C#
-// Get image tags
-if (result.Tags.Values.Count > 0)
-{
-    Console.WriteLine($"\n Tags:");
-    foreach (DetectedTag tag in result.Tags.Values)
-    {
-        Console.WriteLine($"   '{tag.Name}', Confidence: {tag.Confidence:F2}");
-    }
-}
-```
 
 **Python**
 
@@ -234,40 +168,6 @@ if result.tags is not None:
 *Object detection* is a specific form of computer vision in which individual objects within an image are identified and their location indicated by a bounding box..
 
 1. In the **AnalyzeImage** function, under the comment **Get objects in the image**, add the following code:
-
-**C#**
-
-```C#
-// Get objects in the image
-if (result.Objects.Values.Count > 0)
-{
-    Console.WriteLine(" Objects:");
-
-    // Prepare image for drawing
-    stream.Close();
-    System.Drawing.Image image = System.Drawing.Image.FromFile(imageFile);
-    Graphics graphics = Graphics.FromImage(image);
-    Pen pen = new Pen(Color.Cyan, 3);
-    Font font = new Font("Arial", 16);
-    SolidBrush brush = new SolidBrush(Color.WhiteSmoke);
-
-    foreach (DetectedObject detectedObject in result.Objects.Values)
-    {
-        Console.WriteLine($"   \"{detectedObject.Tags[0].Name}\"");
-
-        // Draw object bounding box
-        var r = detectedObject.BoundingBox;
-        Rectangle rect = new Rectangle(r.X, r.Y, r.Width, r.Height);
-        graphics.DrawRectangle(pen, rect);
-        graphics.DrawString(detectedObject.Tags[0].Name,font,brush,(float)r.X, (float)r.Y);
-    }
-
-    // Save annotated image
-    String output_file = "objects.jpg";
-    image.Save(output_file);
-    Console.WriteLine("  Results saved in " + output_file + "\n");
-}
-```
 
 **Python**
 
@@ -309,39 +209,6 @@ if result.objects is not None:
 
 1. In the **AnalyzeImage** function, under the comment **Get people in the image**, add the following code:
 
-**C#**
-
-```C#
-// Get people in the image
-if (result.People.Values.Count > 0)
-{
-    Console.WriteLine($" People:");
-
-    // Prepare image for drawing
-    System.Drawing.Image image = System.Drawing.Image.FromFile(imageFile);
-    Graphics graphics = Graphics.FromImage(image);
-    Pen pen = new Pen(Color.Cyan, 3);
-    Font font = new Font("Arial", 16);
-    SolidBrush brush = new SolidBrush(Color.WhiteSmoke);
-
-    foreach (DetectedPerson person in result.People.Values)
-    {
-        // Draw object bounding box
-        var r = person.BoundingBox;
-        Rectangle rect = new Rectangle(r.X, r.Y, r.Width, r.Height);
-        graphics.DrawRectangle(pen, rect);
-        
-        // Return the confidence of the person detected
-        //Console.WriteLine($"   Bounding box {person.BoundingBox.ToString()}, Confidence: {person.Confidence:F2}");
-    }
-
-    // Save annotated image
-    String output_file = "persons.jpg";
-    image.Save(output_file);
-    Console.WriteLine("  Results saved in " + output_file + "\n");
-}
-```
-
 **Python**
 
 ```Python
@@ -357,13 +224,14 @@ if result.people is not None:
     color = 'cyan'
 
     for detected_people in result.people.list:
-        # Draw object bounding box
-        r = detected_people.bounding_box
-        bounding_box = ((r.x, r.y), (r.x + r.width, r.y + r.height))
-        draw.rectangle(bounding_box, outline=color, width=3)
+        if detected_people.confidence > 0.8:
+            # Draw object bounding box
+            r = detected_people.bounding_box
+            bounding_box = ((r.x, r.y), (r.x + r.width, r.y + r.height))
+            draw.rectangle(bounding_box, outline=color, width=3)
 
         # Return the confidence of the person detected
-        #print(" {} (confidence: {:.2f}%)".format(detected_people.bounding_box, detected_people.confidence * 100))
+        print(" {} (confidence: {:.2f}%)".format(detected_people.bounding_box, detected_people.confidence * 100))
         
     # Save annotated image
     plt.imshow(image)
@@ -373,11 +241,9 @@ if result.people is not None:
     print('  Results saved in', outputfile)
 ```
 
-2. (Optional) Uncomment the **Console.Writeline** command under the **Return the confidence of the person detected** section to review the confidence level returned that a person was detected at a particular position of the image.
 
-3. Save your changes and run the program once for each of the image files in the **images** folder, observing any objects that are detected. After each run, view the **objects.jpg** file that is generated in the same folder as your code file to see the annotated objects.
+3. Save your changes and run the program once for each of the image files in the **images** folder, observing any objects that are detected. After each run, view the **people.jpg** file that is generated in the same folder as your code file to see the annotated objects.
 
-> **Note**: In the preceding tasks, you used a single method to analyze the image, and then incrementally added code to parse and display the results. The SDK also provides individual methods for suggesting captions, identifying tags, detecting objects, and so on - meaning that you can use the most appropriate method to return only the information you need, reducing the size of the data payload that needs to be returned. See the [.NET SDK documentation](https://learn.microsoft.com/dotnet/api/overview/azure/cognitiveservices/computervision?view=azure-dotnet) or [Python SDK documentation](https://learn.microsoft.com/python/api/azure-cognitiveservices-vision-computervision/azure.cognitiveservices.vision.computervision) for more details.
 
 ## Remove the background or generate a foreground matte of an image
 
@@ -385,44 +251,6 @@ In some cases, you may need to create remove the background of an image or might
 
 1. In your code file, find the **BackgroundForeground** function; and under the comment **Remove the background from the image or generate a foreground matte**, add the following code:
 
-**C#**
-
-```C#
-// Remove the background from the image or generate a foreground matte
-Console.WriteLine($" Background removal:");
-// Define the API version and mode
-string apiVersion = "2023-02-01-preview";
-string mode = "backgroundRemoval"; // Can be "foregroundMatting" or "backgroundRemoval"
-
-string url = $"computervision/imageanalysis:segment?api-version={apiVersion}&mode={mode}";
-
-// Make the REST call
-using (var client = new HttpClient())
-{
-    var contentType = new MediaTypeWithQualityHeaderValue("application/json");
-    client.BaseAddress = new Uri(endpoint);
-    client.DefaultRequestHeaders.Accept.Add(contentType);
-    client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
-
-    var data = new
-    {
-        url = $"https://github.com/MicrosoftLearning/mslearn-ai-vision/blob/main/Labfiles/01-analyze-images/Python/image-analysis/{imageFile}?raw=true"
-    };
-
-    var jsonData = JsonSerializer.Serialize(data);
-    var contentData = new StringContent(jsonData, Encoding.UTF8, contentType);
-    var response = await client.PostAsync(url, contentData);
-
-    if (response.IsSuccessStatusCode) {
-        File.WriteAllBytes("background.png", response.Content.ReadAsByteArrayAsync().Result);
-        Console.WriteLine("  Results saved in background.png\n");
-    }
-    else
-    {
-        Console.WriteLine($"API error: {response.ReasonPhrase} - Check your body url, key, and endpoint.");
-    }
-}
-```
 
 **Python**
 
@@ -455,19 +283,15 @@ print('  Results saved in background.png \n')
 
 Let's now generate a foreground matte for our images.
 
-3. In your code file, find the **BackgroundForeground** function; and under the comment **Define the API version and mode**, change the mode variable to be `foregroundMatting`.
-
 4. Save your changes and run the program once for each of the image files in the **images** folder, opening the **background.png** file that is generated in the same folder as your code file for each image.  Notice how a foreground matte has been generated for your images.
 
-## Clean up resources
+## ACTION Lab 02
 
-If you're not using the Azure resources created in this lab for other training modules, you can delete them to avoid incurring further charges. Here's how:
-
-1. Open the Azure portal at `https://portal.azure.com`, and sign in using the Microsoft account associated with your Azure subscription.
-
-2. In the top search bar, search for *Azure AI services multi-service account*, and select the Azure AI services multi-service account resource you created in this lab.
-
-3. On the resource page, select **Delete** and follow the instructions to delete the resource.
+**Upload the following content to ADI for Lab 02** 
+- completed **image-analysis.py** app
+- **people.jpg** as the result of running analysis for **building.jpg**
+- **objects.jpg** as the result of running analysis for **street.jpg**
+- **Background.jpg** as the result of running analysis for **person.jpg**
 
 ## More information
 

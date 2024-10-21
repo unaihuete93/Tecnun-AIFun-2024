@@ -113,14 +113,6 @@ You can write code that consumes Azure AI services REST APIs directly, but there
 **Upload an screenshot to ADI with the execution of the sdk-client program testing it with a sentence.** 
 
 
-## Clean up resources
-
-If you're not using the Azure resources created in this lab for other training modules, you can delete them to avoid incurring further charges.
-
-1. Open the Azure portal at `https://portal.azure.com`, and in the top search bar, search for the resources you created in this lab.
-
-2. On the resource page, select **Delete** and follow the instructions to delete the resource. Alternatively, you can delete the entire resource group to clean up all resources at the same time.
-
 ## More information
 
 For more information about Azure AI Services, see the [Azure AI Services documentation](https://docs.microsoft.com/azure/ai-services/what-are-ai-services).
