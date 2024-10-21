@@ -40,45 +40,36 @@ To complete this exercise, you'll need:
 
 You're going to ground the prompts you use with a generative AI model by using your own data. In this exercise, the data consists of a collection of travel brochures from the fictional *Margies Travel* company.
 
-1. In a new browser tab, download an archive of brochure data from `https://aka.ms/own-data-brochures`. Extract the brochures to a folder on your PC.
-1. In the Azure portal, navigate to your storage account and view the **Storage browser** page.
+1. Gotuo your GitHub Codespace and download the pdfs in the folder **Lab-Files/Lab04/data**.
+1. In the Azure portal, navigate to your **storage account** and view the **Storage browser** page.
 1. Select **Blob containers** and then add a new container named `margies-travel`.
-1. Select the **margies-travel** container, and then upload the .pdf brochures you extracted previously to the root folder of the blob container.
+1. Select the **margies-travel** container, and then upload the .pdf brochures you donwloaded.
 
-## Deploy AI models
+## AI models
 
 You're going to use two AI models in this exercise:
 
 - A text embedding model to *vectorize* the text in the brochures so it can be indexed efficiently for use in grounding prompts.
-- A GPT model that you application can use to generate responses to prompts that are grounded in your data.
+- A GPT model that you application can use to generate responses to prompts that are grounded in your data. **Same gpt4 model from lab03**
 
 To deploy these models, you'll use AI Studio.
 
 1. In the Azure portal, navigate to your Azure OpenAI resource. Then use the link to open your resource in **Azure AI Studio**..
-1. In Azure AI Studio, on the **Deployments** page, view your existing model deployments. Then create a new base model deployment of the **text-embedding-ada-002** model with the following settings:
+1. In Azure AI Studio, on the **Deployments** page, view your existing model deployments. Then create a new **base model** deployment of the **text-embedding-ada-002** model with the following settings:
     - **Deployment name**: text-embedding-ada-002
     - **Model**: text-embedding-ada-002
     - **Model version**: *The default version*
     - **Deployment type**: Standard
     - **Tokens per minute rate limit**: 5K\*
-    - **Content filter**: Default
-    - **Enable dynamic quota**: Enabled
-1. After the text embedding model has been deployed, return to the **Deployments** page and create a new deployment of the **gpt-35-turbo-16k** model with the following settings:
-    - **Deployment name**: gpt-35-turbo-16k
-    - **Model**: gpt-35-turbo-16k *(if the 16k model isn't available, choose gpt-35-turbo)*
-    - **Model version**: *The default version*
-    - **Deployment type**: Standard
-    - **Tokens per minute rate limit**: 5K\*
-    - **Content filter**: Default
+    - **Content filter**: DefaultV2
     - **Enable dynamic quota**: Enabled
 
-    > \* A rate limit of 5,000 tokens per minute is more than adequate to complete this exercise while leaving capacity for other people using the same subscription.
 
 ## Create an index
 
-To make it easy to use your own data in a prompt, you'll index it using Azure AI Search. You'll use the text embedding mdoel you deployed previously during the indexing process to *vectorize* the text data (which results in each text token in the index being represented by numeric vectors - making it compatible with the way a generative AI model represents text)
+To make it easy to use your own data in a prompt, you'll index it using Azure AI Search. You'll use the text embedding model you deployed previously during the indexing process to *vectorize* the text data (which results in each text token in the index being represented by numeric vectors - making it compatible with the way a generative AI model represents text)
 
-1. In the Azure portal, navigate to your Azure AI Search resource.
+1. In the Azure portal, navigate to your **Azure AI Search** resource.
 1. On the **Overview** page, select **Import and vectorize data**.
 1. In the **Setup your data connection** page, select **Azure Blob Storage** and configure the data source with the following settings:
     - **Subscription**: The Azure subscription in which you provisioned your storage account.
@@ -95,37 +86,24 @@ To make it easy to use your own data in a prompt, you'll index it using Azure AI
     - **Authentication type**: API key
     - **I acknowledge that connecting to an Azure OpenAI service will incur additional costs to my account**: Selected
 1. On the next page, do <u>not</u> select the option to vectorize images or extract data with AI skills.
-1. On the next page, enable semantic ranking and schedule the indexer to run once.
-1. On the final page, set the **Objects name prefix** to `margies-index` and then create the index.
+1. On the next page,  schedule the indexer to run once.
+1. On the final page, set the **Objects name prefix** to `margies-index` and then **create** the index.
 
-## Prepare to develop an app in Visual Studio Code
+## Prepare to develop an app in Github Codespace
 
-Now let's explore the use of your own data in an app that uses the Azure OpenAI service SDK. You'll develop your app using Visual Studio Code. The code files for your app have been provided in a GitHub repo.
+Now let's explore the use of your own data in an app that uses the Azure OpenAI service SDK. You'll develop your app using Github Codespace. The code files for your app have been provided in a GitHub repo.
 
-> **Tip**: If you have already cloned the **mslearn-openai** repo, open it in Visual Studio code. Otherwise, follow these steps to clone it to your development environment.
 
-1. Start Visual Studio Code.
-2. Open the palette (SHIFT+CTRL+P) and run a **Git: Clone** command to clone the `https://github.com/MicrosoftLearning/mslearn-openai` repository to a local folder (it doesn't matter which folder).
-3. When the repository has been cloned, open the folder in Visual Studio Code.
 
-    > **Note**: If Visual Studio Code shows you a pop-up message to prompt you to trust the code you are opening, click on **Yes, I trust the authors** option in the pop-up.
+1. Start Github Codespace.
 
-4. Wait while additional files are installed to support the C# code projects in the repo.
-
-    > **Note**: If you are prompted to add required assets to build and debug, select **Not Now**.
 
 ## Configure your application
 
-Applications for both C# and Python have been provided, and both apps feature the same functionality. First, you'll complete some key parts of the application to enable using your Azure OpenAI resource.
+1. In Github Codespace, in the **Explorer** pane, browse to the **Lab-files/Lab04/app** folder. It contains the language-specific files for an app into which you're going to integrate Azure OpenAI functionality.
+2. Right-click the **app** folder containing your code files and open an integrated terminal. Then install the Azure OpenAI SDK package by running the appropriate command:
 
-1. In Visual Studio Code, in the **Explorer** pane, browse to the **Labfiles/06-use-own-data** folder and expand the **CSharp** or **Python** folder depending on your language preference. Each folder contains the language-specific files for an app into which you're going to integrate Azure OpenAI functionality.
-2. Right-click the **CSharp** or **Python** folder containing your code files and open an integrated terminal. Then install the Azure OpenAI SDK package by running the appropriate command for your language preference:
-
-    **C#**:
-
-    ```
-    dotnet add package Azure.AI.OpenAI --version 1.0.0-beta.14
-    ```
+    
 
     **Python**:
 
@@ -133,7 +111,7 @@ Applications for both C# and Python have been provided, and both apps feature th
     pip install openai==1.13.3
     ```
 
-3. In the **Explorer** pane, in the **CSharp** or **Python** folder, open the configuration file for your preferred language
+3. In the **Explorer** pane, in the **app** folder, open the configuration file
 
     - **C#**: appsettings.json
     - **Python**: .env
@@ -141,8 +119,8 @@ Applications for both C# and Python have been provided, and both apps feature th
 4. Update the configuration values to include:
     - The  **endpoint** and a **key** from the Azure OpenAI resource you created (available on the **Keys and Endpoint** page for your Azure OpenAI resource in the Azure portal)
     - The **deployment name** you specified for your gpt-35-turbo model deployment (available in the **Deployments** page in Azure AI Studio).
-    - The endpoint for your search service (the **Url** value on the overview page for your search resource in the Azure portal).
-    - A **key** for your search resource (available in the **Keys** page for your search resource in the Azure portal - you can use either of the admin keys)
+    - The endpoint for your **search** service (the **Url** value on the overview page for your search resource in the Azure portal).
+    - A **key** for your **search** resource (available in the **Keys** page for your search resource in the Azure portal - you can use either of the admin keys)
     - The name of the search index (which should be `margies-index`).
 5. Save the configuration file.
 
@@ -150,19 +128,9 @@ Applications for both C# and Python have been provided, and both apps feature th
 
 Now you're ready to use the Azure OpenAI SDK to consume your deployed model.
 
-1. In the **Explorer** pane, in the **CSharp** or **Python** folder, open the code file for your preferred language, and replace the comment ***Configure your data source*** with code to add the Azure OpenAI SDK library:
+1. In the **Explorer** pane, in the **app** folder, open the code file , and replace the comment ***Configure your data source*** with code to add the Azure OpenAI SDK library:
 
-    **C#**: ownData.cs
-
-    ```csharp
-    // Configure your data source
-    AzureSearchChatExtensionConfiguration ownDataConfig = new()
-    {
-            SearchEndpoint = new Uri(azureSearchEndpoint),
-            Authentication = new OnYourDataApiKeyAuthenticationOptions(azureSearchKey),
-            IndexName = azureSearchIndex
-    };
-    ```
+    
 
     **Python**: ownData.py
 
@@ -190,15 +158,21 @@ Now that your app has been configured, run it to send your request to your model
 
 1. In the interactive terminal pane, ensure the folder context is the folder for your preferred language. Then enter the following command to run the application.
 
-    - **C#**: `dotnet run`
-    - **Python**: `python ownData.py`
+    - **Python**: `python owndata.py`
 
     > **Tip**: You can use the **Maximize panel size** (**^**) icon in the terminal toolbar to see more of the console text.
 
-2. Review the response to the prompt `Tell me about London`, which should include an answer as well as some details of the data used to ground the prompt, which was obtained from your search service.
+2. Review the response to the prompt `What are the best months to visit London`, which should include an answer as well as some details of the data used to ground the prompt, which was obtained from your search service.
 
-    > **Tip**: If you want to see the citations from your search index, set the variable ***show citations*** near the top of the code file to **true**.
+3. You will see the model answers based on the information found in **Tecnun-AIFun-2024/Lab-Files/Lab04/data/London Brochure.pdf**.
 
-## Clean up
+![](images/lab-04-unai.png)
 
-When you're done with your Azure OpenAI resource, remember to delete the resources in the **Azure portal** at `https://portal.azure.com`. Be sure to also include the storage account and search resource, as those can incur a relatively large cost.
+## ACTION Lab 04
+
+**Upload the following content to ADI for Lab 03** 
+- completed **owndata.py** app
+- Screenshot of result show for **Run your application ** task (previous task). The screenshot should show the github user (see below)
+- Show it to teacher
+
+![Lab04 completion](images/lab-04-unai-2.png)
