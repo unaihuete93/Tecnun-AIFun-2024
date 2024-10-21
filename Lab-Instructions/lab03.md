@@ -129,44 +129,30 @@ With the Azure OpenAI Service, developers can create chatbots, language models, 
 In the scenario for this exercise, you will perform the role of a software developer who has been tasked to implement an app that can use generative AI to help provide hiking recommendations. The techniques used in the exercise can be applied to any app that wants to use Azure OpenAI APIs.
 
 
-## Prepare to develop an app in Visual Studio Code
+## Prepare to develop an app in Github Codespace
 
-You'll develop your Azure OpenAI app using Visual Studio Code. The code files for your app have been provided in a GitHub repo.
+You'll develop your Azure OpenAI app using Github Codespace. The code files for your app have been provided in a GitHub repo.
 
-> **Tip**: If you have already cloned the **mslearn-openai** repo, open it in Visual Studio code. Otherwise, follow these steps to clone it to your development environment.
 
-1. Start Visual Studio Code.
-2. Open the palette (SHIFT+CTRL+P) and run a **Git: Clone** command to clone the `https://github.com/MicrosoftLearning/mslearn-openai` repository to a local folder (it doesn't matter which folder).
-3. When the repository has been cloned, open the folder in Visual Studio Code.
+1. Start Github Codespace (if not running) used in previous labs
 
-    > **Note**: If Visual Studio Code shows you a pop-up message to prompt you to trust the code you are opening, click on **Yes, I trust the authors** option in the pop-up.
-
-4. Wait while additional files are installed to support the C# code projects in the repo.
-
-    > **Note**: If you are prompted to add required assets to build and debug, select **Not Now**.
 
 ## Configure your application
 
 Applications for both C# and Python have been provided. Both apps feature the same functionality. First, you'll complete some key parts of the application to enable using your Azure OpenAI resource.
 
-1. In Visual Studio Code, in the **Explorer** pane, browse to the **Labfiles/02-azure-openai-api** folder and expand the **CSharp** or **Python** folder depending on your language preference. Each folder contains the language-specific files for an app into which you're going to integrate Azure OpenAI functionality.
-2. Right-click the **CSharp** or **Python** folder containing your code files and open an integrated terminal. Then install the Azure OpenAI SDK package by running the appropriate command for your language preference:
+1. In Github Codespace, in the **Explorer** pane, browse to the **Lab-Files/Lab03** folder which contains the language-specific files for an app into which you're going to integrate Azure OpenAI functionality.
+2. Right-click the folder containing your code files and open an integrated terminal. Then install the Azure OpenAI SDK package by running the appropriate command:
 
-    **C#**:
-
-    ```
-    dotnet add package Azure.AI.OpenAI --version 1.0.0-beta.14
-    ```
-
+    
     **Python**:
 
     ```
     pip install openai==1.13.3
     ```
 
-3. In the **Explorer** pane, in the **CSharp** or **Python** folder, open the configuration file for your preferred language
+3. In the **Explorer** pane, open the configuration file
 
-    - **C#**: appsettings.json
     - **Python**: .env
     
 4. Update the configuration values to include:
@@ -178,14 +164,7 @@ Applications for both C# and Python have been provided. Both apps feature the sa
 
 Now you're ready to use the Azure OpenAI SDK to consume your deployed model.
 
-1. In the **Explorer** pane, in the **CSharp** or **Python** folder, open the code file for your preferred language, and replace the comment ***Add Azure OpenAI package*** with code to add the Azure OpenAI SDK library:
-
-    **C#**: Program.cs
-
-    ```csharp
-    // Add Azure OpenAI package
-    using Azure.AI.OpenAI;
-    ```
+1. In the **Explorer** pane,  open the code file , and replace the comment ***Add Azure OpenAI package*** with code to add the Azure OpenAI SDK library:
     
     **Python**: test-openai-model.py
     
@@ -196,15 +175,6 @@ Now you're ready to use the Azure OpenAI SDK to consume your deployed model.
 
 1. In the application code for your language, replace the comment ***Initialize the Azure OpenAI client...*** with the following code to initialize the client and define our system message.
 
-    **C#**: Program.cs
-
-    ```csharp
-    // Initialize the Azure OpenAI client
-    OpenAIClient client = new OpenAIClient(new Uri(oaiEndpoint), new AzureKeyCredential(oaiKey));
-    
-    // System message to provide context to the model
-    string systemMessage = "I am a hiking enthusiast named Forest who helps people discover hikes in their area. If no area is specified, I will default to near Rainier National Park. I will then provide three suggestions for nearby hikes that vary in length. I will also share an interesting fact about the local nature on the hikes when making a recommendation.";
-    ```
 
     **Python**: test-openai-model.py
 
@@ -218,38 +188,13 @@ Now you're ready to use the Azure OpenAI SDK to consume your deployed model.
     
     # Create a system message
     system_message = """I am a hiking enthusiast named Forest who helps people discover hikes in their area. 
-        If no area is specified, I will default to near Rainier National Park. 
-        I will then provide three suggestions for nearby hikes that vary in length. 
-        I will also share an interesting fact about the local nature on the hikes when making a recommendation.
+            If no area is specified, I will default to San Sebastian area in Basque Country, Spain. 
+            I will then provide three suggestions for nearby hikes that vary in length. 
+            I will also share an interesting fact about the local nature on the hikes when making a recommendation.
         """
     ```
 
 1. Replace the comment ***Add code to send request...*** with the necessary code for building the request; specifying the various parameters for your model such as `messages` and `temperature`.
-
-    **C#**: Program.cs
-
-    ```csharp
-    // Add code to send request...
-    // Build completion options object
-    ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions()
-    {
-        Messages =
-        {
-            new ChatRequestSystemMessage(systemMessage),
-            new ChatRequestUserMessage(inputText),
-        },
-        MaxTokens = 400,
-        Temperature = 0.7f,
-        DeploymentName = oaiDeploymentName
-    };
-
-    // Send request to Azure OpenAI model
-    ChatCompletions response = client.GetChatCompletions(chatCompletionsOptions);
-
-    // Print the response
-    string completion = response.Choices[0].Message.Content;
-    Console.WriteLine("Response: " + completion + "\n");
-    ```
 
     **Python**: test-openai-model.py
 
@@ -279,15 +224,14 @@ Now that your app has been configured, run it to send your request to your model
 
 1. In the interactive terminal pane, ensure the folder context is the folder for your preferred language. Then enter the following command to run the application.
 
-    - **C#**: `dotnet run`
     - **Python**: `python test-openai-model.py`
 
     > **Tip**: You can use the **Maximize panel size** (**^**) icon in the terminal toolbar to see more of the console text.
 
 1. When prompted, enter the text `What hike should I do near Rainier?`.
 1. Observe the output, taking note that the response follows the guidelines provided in the system message you added to the *messages* array.
-1. Provide the prompt `Where should I hike near Boise? I'm looking for something of easy difficulty, between 2 to 3 miles, with moderate elevation gain.` and observe the output.
-1. In the code file for your preferred language, change the *temperature* parameter value in your request to **1.0** and save the file.
+1. Provide the prompt `Where should I hike near Bilbao? I'm looking for something of easy difficulty, between 2 to 3 miles, with moderate elevation gain.` and observe the output.
+1. Change the *temperature* parameter value in your request to **1.0** and save the file.
 1. Run the application again using the prompts above, and observe the output.
 
 Increasing the temperature often causes the response to vary, even when provided the same text, due to the increased randomness. You can run it several times to see how the output may change. Try using different values for your temperature with the same input.
@@ -296,20 +240,10 @@ Increasing the temperature often causes the response to vary, even when provided
 
 In most real-world applications, the ability to reference previous parts of the conversation allows for a more realistic interaction with an AI agent. The Azure OpenAI API is stateless by design, but by providing a history of the conversation in your prompt you enable the AI model to reference past messages.
 
-1. Run the app again and provide the prompt `Where is a good hike near Boise?`.
+1. Run the app again and provide the prompt `Where are 3 good hikes near Bilbao?`.
 1. Observe the output, and then prompt `How difficult is the second hike you suggested?`.
-1. The response from the model will likely indicate can't understand the hike you're referring to. To fix that, we can enable the model to have the past conversation messages for reference.
+1. The response from the model will likely indicate **can't understand the hike you're referring to**. To fix that, we can enable the model to **have the past conversation messages for reference**.
 1. In your application, we need to add the previous prompt and response to the future prompt we are sending. Below the definition of the **system message**, add the following code.
-
-    **C#**: Program.cs
-
-    ```csharp
-    // Initialize messages list
-    var messagesList = new List<ChatRequestMessage>()
-    {
-        new ChatRequestSystemMessage(systemMessage),
-    };
-    ```
 
     **Python**: test-openai-model.py
 
@@ -320,37 +254,7 @@ In most real-world applications, the ability to reference previous parts of the 
 
 1. Under the comment ***Add code to send request...***, replace all the code from the comment to the end of the **while** loop with the following code then save the file. The code is mostly the same, but now using the messages array to store the conversation history.
 
-    **C#**: Program.cs
 
-    ```csharp
-    // Add code to send request...
-    // Build completion options object
-    messagesList.Add(new ChatRequestUserMessage(inputText));
-
-    ChatCompletionsOptions chatCompletionsOptions = new ChatCompletionsOptions()
-    {
-        MaxTokens = 1200,
-        Temperature = 0.7f,
-        DeploymentName = oaiDeploymentName
-    };
-
-    // Add messages to the completion options
-    foreach (ChatRequestMessage chatMessage in messagesList)
-    {
-        chatCompletionsOptions.Messages.Add(chatMessage);
-    }
-
-    // Send request to Azure OpenAI model
-    ChatCompletions response = client.GetChatCompletions(chatCompletionsOptions);
-
-    // Return the response
-    string completion = response.Choices[0].Message.Content;
-
-    // Add generated text to messages list
-    messagesList.Add(new ChatRequestAssistantMessage(completion));
-
-    Console.WriteLine("Response: " + completion + "\n");
-    ```
 
     **Python**: test-openai-model.py
 
@@ -376,15 +280,20 @@ In most real-world applications, the ability to reference previous parts of the 
 1. Save the file. In the code you added, notice we now append the previous input and response to the prompt array which allows the model to understand the history of our conversation.
 1. In the terminal pane, enter the following command to run the application.
 
-    - **C#**: `dotnet run`
     - **Python**: `python test-openai-model.py`
 
-1. Run the app again and provide the prompt `Where is a good hike near Boise?`.
+
+## TEST APP 
+1. Run the app again and provide the prompt `Where are 3 good hikes near Bilbao?`.
 1. Observe the output, and then prompt `How difficult is the second hike you suggested?`.
 1. You'll likely get a response about the second hike the model suggested, which provides a much more realistic conversation. You can ask additional follow up questions referencing previous answers, and each time the history provides context for the model to answer.
 
-    > **Tip**: The token count is only set to 1200, so if the conversation continues too long the application will run out of available tokens, resulting in an incomplete prompt. In production uses, limiting the length of the history to the most recent inputs and responses will help control the number of required tokens.
+    > **Tip**: The token count is only set to 1200, so **if the conversation continues too long the application will run out of available tokens!**, resulting in an incomplete prompt. In production uses, limiting the length of the history to the most recent inputs and responses will help control the number of required tokens.
 
-## Clean up
+## ACTION Lab 03
 
-When you're done with your Azure OpenAI resource, remember to delete the deployment or the entire resource in the **Azure portal** at `https://portal.azure.com`.
+**Upload the following content to ADI for Lab 03** 
+- completed **test-openai-model.py** app
+- Screenshot of result show for **TEST APP** task (previous task). The screenshot should show the github user (see below)
+
+![Lab03 completion](images/lab03-unai.png)
